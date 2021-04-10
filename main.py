@@ -100,8 +100,5 @@ def addmovies():
     return 'POST REQUEST WORKED'
     #check my table in mySQL Workbench to verify the user has been added
 
-@app.route('/api/editmovies', methods=['PUT'])
-def editmovies():
-    
 
-    app.run()
+app.run()
