@@ -1,8 +1,6 @@
 
-import requests  # Import requests library to access api data
 import mysql.connector  # Import connector to access sql database
 from mysql.connector import Error  # Import error to make sure connection is successful
-from datetime import date # Import datetime to access today's date
 
 # Create a function to connect to the sql database using mysql connector
 def create_connection(host_name, user_name, user_password, db_name):
