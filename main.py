@@ -1,6 +1,7 @@
 import flask
 from flask import jsonify
 from flask import request
+import requests
 import mysql.connector  # Import connector to access sql database
 from mysql.connector import Error  # Import error to make sure connection is successful
 
@@ -41,6 +42,16 @@ def execute_query(connection, query):
         # Display error message if details do not match and query does not execute
         print(f"The error '{e}' occurred")
 
+# Create a function to execute an insert query to the successfully connected mysql database
+def execute_read_query(connection, query):
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Error as e:
+        print(f"The error '{e}' occurred")
 
 @app.route('/', methods=['GET'])  # routing = mapping urls to functions; home is usually mapped to '/'
 def home():
@@ -56,9 +67,22 @@ def api_all():
     results = cursor.fetchall()
     return jsonify(results)
 
+@app.route('/api/friendid', methods=['GET'])
+def api_friend_id():
+    request_data = request.get_json()
+    firstname = request_data['firstname']
+    lastname = request_data['lastname']
+
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    sql = "SELECT * FROM friend"
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    results = []
+
 
 @app.route('/api/movies', methods=['GET'])  # API to get our users from mySQL table in AWS as JSON response
-def api_user_id():
+def api_friendby_id():
     if 'id' in request.args:
         id = int(request.args['id'])
     else:
@@ -100,5 +124,37 @@ def addmovies():
     return 'POST REQUEST WORKED'
     #check my table in mySQL Workbench to verify the user has been added
 
+@app.route('/api/updatemovielist', methods=['PUT'])
+def updatemovielist():
+    request_data = request.get_json()
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    query = "UPDATE movielist SET movie1 = '{}', movie2 = '{}', movie3 = '{}', movie4 = '{}', movie5 = '{}', movie6 = '{}', movie7 = '{}', movie8 = '{}', movie9 = '{}', movie10 = '{}' " \
+            "where id = {}""".format("1movie", "2movie", "3movie", "4movie", "5movie", "6movie", "7movie", "8movie", "9movie", "10movie", 1)
+    execute_query(connection, query)
+    return "UPDATE Worked"
+
+@app.route('/api/deletemovielist', methods=['DELETE'])
+def deletemovielist():
+    request_data = request.get_json()
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    query = "delete from movielist where id = {} ".format(6)
+    execute_query(connection, query)
+    return "DELETE WORKED"
+
+@app.route('/api/randomselection', methods=['GET'])
+def randmovie():
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    sql = "SELECT movie1, movie2, movie3, movie4, movie5, movie6, movie7, movie8, movie9, movie10" \
+          "FROM movielist"
+    results = execute_read_query(connection, sql)
+    list = []
+
+    for movie in results:
+        list.append(movie)
+
+    return jsonify(list)
 
 app.run()
