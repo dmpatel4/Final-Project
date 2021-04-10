@@ -1,6 +1,13 @@
 
+import flask
+from flask import jsonify
+from flask import request
 import mysql.connector  # Import connector to access sql database
 from mysql.connector import Error  # Import error to make sure connection is successful
+
+# setting up an application name
+app = flask.Flask(__name__) # set up application
+app.config["DEBUG"] = True # allow to show error message in browser
 
 # Create a function to connect to the sql database using mysql connector
 def create_connection(host_name, user_name, user_password, db_name):
@@ -47,3 +54,7 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred")
 
 connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+
+@app.route('/', methods=['GET'])  # routing = mapping urls to functions; home is usually mapped to '/'
+def home():
+    return "<h1>Hi and welcome to our first API!</h1>"
