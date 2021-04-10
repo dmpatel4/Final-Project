@@ -4,6 +4,7 @@ from flask import request
 import requests
 import mysql.connector  # Import connector to access sql database
 from mysql.connector import Error  # Import error to make sure connection is successful
+import random
 
 # setting up an application name
 app = flask.Flask(__name__)  # set up application
@@ -67,19 +68,14 @@ def api_all():
     results = cursor.fetchall()
     return jsonify(results)
 
-@app.route('/api/friendid', methods=['GET'])
-def api_friend_id():
-    request_data = request.get_json()
-    firstname = request_data['firstname']
-    lastname = request_data['lastname']
-
+@app.route('/api/friends/all', methods=['GET'])
+def all_friends():
     connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
     cursor = connection.cursor(dictionary=True)
     sql = "SELECT * FROM friend"
     cursor.execute(sql)
-    rows = cursor.fetchall()
-    results = []
-
+    results = cursor.fetchall()
+    return jsonify(results)
 
 @app.route('/api/movies', methods=['GET'])  # API to get our users from mySQL table in AWS as JSON response
 def api_friendby_id():
@@ -124,6 +120,22 @@ def addmovies():
     return 'POST REQUEST WORKED'
     #check my table in mySQL Workbench to verify the user has been added
 
+@app.route('/api/addfriends', methods=['POST'])
+def addfriends():
+
+    # Request data and get first and last name value
+    request_data = request.get_json()
+    firstname = request_data['firstname']
+    lastname = request_data['lastname']
+
+    # Create connection and insert query to insert value into database
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    query = "INSERT INTO friend (firstname, lastname) " \
+            "VALUES ('z" + firstname + "','" + lastname + "')"
+    execute_query(connection, query)
+    return 'POST REQUEST WORKED'
+    # check my table in mySQL Workbench to verify the user has been added
+
 @app.route('/api/updatemovielist', methods=['PUT'])
 def updatemovielist():
     request_data = request.get_json()
@@ -131,6 +143,16 @@ def updatemovielist():
     cursor = connection.cursor(dictionary=True)
     query = "UPDATE movielist SET movie1 = '{}', movie2 = '{}', movie3 = '{}', movie4 = '{}', movie5 = '{}', movie6 = '{}', movie7 = '{}', movie8 = '{}', movie9 = '{}', movie10 = '{}' " \
             "where id = {}""".format("1movie", "2movie", "3movie", "4movie", "5movie", "6movie", "7movie", "8movie", "9movie", "10movie", 1)
+    execute_query(connection, query)
+    return "UPDATE Worked"
+
+@app.route('/api/updatefriend', methods=['PUT'])
+def updatefriend():
+    request_data = request.get_json()
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    query = "UPDATE friend SET firstname = '{}', lastname = '{}' " \
+            "where id = {}""".format("test", "case", 12)
     execute_query(connection, query)
     return "UPDATE Worked"
 
@@ -143,18 +165,27 @@ def deletemovielist():
     execute_query(connection, query)
     return "DELETE WORKED"
 
+@app.route('/api/deletefriend', methods=['DELETE'])
+def deletefriend():
+    request_data = request.get_json()
+    connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
+    cursor = connection.cursor(dictionary=True)
+    query = "delete from friend where id = {} ".format(13)
+    execute_query(connection, query)
+    return "DELETE WORKED"
+
 @app.route('/api/randomselection', methods=['GET'])
 def randmovie():
     connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
-    cursor = connection.cursor(dictionary=True)
-    sql = "SELECT movie1, movie2, movie3, movie4, movie5, movie6, movie7, movie8, movie9, movie10" \
-          "FROM movielist"
+    sql = "SELECT movie1, movie2, movie3, movie4, movie5, movie6, movie7, movie8, movie9, movie10 FROM movielist"
     results = execute_read_query(connection, sql)
-    list = []
+    movielist = []
 
     for movie in results:
-        list.append(movie)
+        for x in movie:
+            movielist.append(x)
 
-    return jsonify(list)
+    random_movie = random.randrange(len(movielist))
+    return movielist([random_movie])
 
 app.run()
