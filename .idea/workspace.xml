@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e762124d-f639-4e06-bda6-4a77bc0c8c20" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Practice.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Final.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practice.py" beforeDir="false" afterPath="$PROJECT_DIR$/Practice.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +31,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Practice">
+  <component name="RunManager" selected="Python.main">
     <configuration name="Backup" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Final-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -96,7 +97,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main2" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.Practice" />
       </list>
     </recent_temporary>
@@ -112,5 +113,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

@@ -55,9 +55,7 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred")
 
 connection = create_connection("cis3368.czszkhju4z7p.us-east-1.rds.amazonaws.com", "admin", "$Koid031", "cis3368db")
-
 sql = "SELECT movie1, movie2, movie3, movie4, movie5, movie6, movie7, movie8, movie9, movie10 FROM movielist"
-
 results = execute_read_query(connection, sql)
 movielist = []
 
@@ -68,4 +66,6 @@ for movie in results:
 random_movie = random.randrange(len(movielist))
 
 movie_name = movielist([random_movie])
+
+print(movie_name)
 
